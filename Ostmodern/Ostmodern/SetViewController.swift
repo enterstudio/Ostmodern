@@ -23,7 +23,7 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
          tableView.registerNib(UINib(nibName: "SetsTableViewCell", bundle: nil), forCellReuseIdentifier: "Cell")
         
-        download_request_Sets()
+        downloadRequestSets()
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,7 +78,7 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     //Mark: - load data
     
-    func download_request_Sets()
+    func downloadRequestSets()
     {
        let url = NSURL(string: "http://feature-code-test.skylark-cms.qa.aws.ostmodern.co.uk:8000/api/sets/")
      
@@ -129,56 +129,57 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
     func readSetRecords( Arrays : NSArray) {
         for array in Arrays {
-            var _title = ""
-            var _id = ""
-            var _link = ""
-            var _episodeArray : [String] = []
-            let dict = array as! NSDictionary
+            var titlePrivate = ""
+            var idPrivate = ""
+            var linkPrivate = ""
+            var episodeArrayPrivate : [String] = []
+          
+            if let dict = array as? NSDictionary {
             
             if let uid = dict["uid"] as? String {
-                _id = uid
+                idPrivate = uid
             }
             if let title = dict["title"] as? String {
-                _title = title
+                titlePrivate = title
             }
             
             
             if let itemArray = dict["items"] as? NSArray {
                 if   itemArray.count > 0 {
-                    _episodeArray = accumulateEpisodes(itemArray,  _episodeArray : _episodeArray)
+                    episodeArrayPrivate = accumulateEpisodes(itemArray,  episodeArray : episodeArrayPrivate)
                    
                 }
                 
             }
             
-            
+        
             if  let  image_urls : [String] = dict["image_urls"]as?  [String] {
                 
                 if image_urls.count > 0 {
                     
                     self.getImageUrl((root_url + image_urls[0]), completion: { (result) in
                         
-                        _link = result
-                        self.addToSetsAndLoadTable(_id, _link: _link,  _title: _title, _episodeArray: _episodeArray)
+                        linkPrivate = result
+                        self.addToSetsAndLoadTable( idPrivate, link: linkPrivate,  title: titlePrivate, episodeArray: episodeArrayPrivate)
                     })
                     
                 } else {
                     //use defailt image
-                    _link = default_image
-                    self.addToSetsAndLoadTable(_id, _link: _link,  _title: _title, _episodeArray: _episodeArray)
+                    linkPrivate = default_image
+                    self.addToSetsAndLoadTable(idPrivate , link: linkPrivate,  title: titlePrivate, episodeArray: episodeArrayPrivate)
                     
                 }
                 
             }
             
-            
+            }
             
         }
 
     }
     
-    func accumulateEpisodes(itemArray: NSArray,  _episodeArray : [String]) -> [String] {
-        var mutable_episodeArray = _episodeArray
+    func accumulateEpisodes(itemArray: NSArray,  episodeArray : [String]) -> [String] {
+        var mutable_episodeArray = episodeArray
         for  item in itemArray {
             
             if let itemDict = item as? NSDictionary {
@@ -195,12 +196,12 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         return mutable_episodeArray
     }
     
-    func addToSetsAndLoadTable(_id: String, _link: String, _title:String, _episodeArray: [String] ) {
+    func addToSetsAndLoadTable( id: String, link: String, title:String, episodeArray: [String] ) {
        
-        let url = NSURL(string: _link)
-        let _data = NSData(contentsOfURL: url!)
+        let url = NSURL(string: link)
+        let data = NSData(contentsOfURL: url!)
         
-        let set = Sets(id: _id, link: _link,  data : _data! ,title: _title, episode: _episodeArray )
+        let set = Sets(id: id, link: link,  data : data! ,title: title, episode: episodeArray )
         
         dispatch_async(dispatch_get_main_queue()) {
             self.setsArray.append(set)

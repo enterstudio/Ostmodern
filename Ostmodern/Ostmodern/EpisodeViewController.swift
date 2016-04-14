@@ -10,7 +10,7 @@ import UIKit
 
 class EpisodeViewController: UIViewController , UITableViewDelegate, UITableViewDataSource {
 
-     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     var episode : [String] = []
     var episodeTitle : [String] = []
     var passedTitle = ""
@@ -21,7 +21,7 @@ class EpisodeViewController: UIViewController , UITableViewDelegate, UITableView
         // Do any additional setup after loading the view.
             self.navigationItem.title  = passedTitle  + " Episodes"
         for epi in episode {
-            download_request_Episode( epi)
+            downloadRequestEpisode( epi)
         }
     }
 
@@ -55,7 +55,7 @@ class EpisodeViewController: UIViewController , UITableViewDelegate, UITableView
         
     }
     
-    func download_request_Episode( episodeUrl : String)
+    func downloadRequestEpisode( episodeUrl : String)
     {
         let url = NSURL(string: episodeUrl)
        
