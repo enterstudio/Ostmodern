@@ -106,9 +106,9 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                     options: []) as! NSDictionary
                 
               //  print(post.description)
-                if let Arrays = post["objects"] as? NSArray {
+                if let arrays = post["objects"] as? NSArray {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                        self.readSetRecords( Arrays)
+                        self.readSetRecords( arrays)
                        
                     }
                    
@@ -127,8 +127,8 @@ class SetViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         task.resume()
     }
 
-    func readSetRecords( Arrays : NSArray) {
-        for array in Arrays {
+    func readSetRecords( arrays : NSArray) {
+        for array in arrays {
             var titlePrivate = ""
             var idPrivate = ""
             var linkPrivate = ""
